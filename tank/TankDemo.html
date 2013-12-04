@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>HTML5坦克游戏Demo ver 1.0.1</title>
+
+
+<style type="text/css">
+#game{ margin:0 auto; width:650px;}
+#myCanvas{ background:url(images/start-bg.png);}
+#show{ margin:0 auto; width:650px; text-align:center; font-weight:bold; margin-top:20px;}
+#baidushare{ text-align:center; width:250px;margin:0 auto;}
+</style>
+</head>
+
+<body>
+<h1 align="center">HTML5 坦克大战 ver 1.0.1</h1>
+<div id="game">
+	<canvas id="myCanvas" width="650" height="400">
+	您的浏览器不支持HTML5哦! 请安装Chrome吧!
+	</canvas>
+	<audio id="audio" src="audio/fire.wav"></audio>
+</div>
+<script type="text/javascript">
+var bullets = new Array();//子弹数组
+var tanks   = new Array();//坏坦克集合
+
+
+
+window.onload = function(){
+	setInterval(start, loopTime);
+	
+	
+	var tank =  new Tank(true,200,200);  
+	var water1 = new Water(100,100);
+	var symbol = new Symbol();
+	var wall = new Wall(0,200);
+	//if(start_audio.paused){ start_audio.play();}	
+	
+	
+	function isTanks(){ 
+		if(tanks.length <= 0){
+			tanks.push(new Tank(false,0,0)); 
+		}
+	}
+	
+	
+	
+	
+	//"绘制线程"
+	function start(){
+		isTanks();
+		tank.hitWater(water1);
+		tank.hitWall(wall);
+		clear();
+		
+		for(var i=0; i < bullets.length; i++){
+			var b = bullets[i];
+			b.draw(context);
+			
+		}
+		for(var j=0; j < tanks.length; j++){
+			var ta = tanks[j]; 
+			tank.hitTank(ta);
+			ta.draw(context);
+		}
+		symbol.draw(context);
+		water1.draw(context);
+		wall.draw(context);
+		tank.draw(context); 
+	}
+	
+	
+	function clear(){
+		context.fillStyle='#000000';
+		context.fillRect(0,0,650,400);
+	}
+	
+ 
+	
+	//捕捉事件
+	document.onkeydown = function(event){tank.keydown(event);}
+	document.onkeyup   = function(event){tank.keyup(event);}
+}
+
+
+
+</script> 
+<div id="show">
+power by marker & <a href="http://t.qq.com/wuweiit">雨林博客</a>
+
+</div>
+ <!-- Baidu Button BEGIN -->
+<div id="baidushare">
+	<div id="bdshare" align="center" class="bdshare_t bds_tools get-codes-bdshare">
+	<span class="bds_more">分享到：</span>
+	<a class="bds_tsina"></a>
+	<a class="bds_qzone"></a>
+	<a class="bds_tqq"></a>
+	<a class="bds_renren"></a>
+	<a class="bds_t163"></a>
+	<a class="bds_hi"></a>
+	<a class="shareCount"></a>
+	</div>
+</div>
+
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=647438" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+var bds_config={"snsKey":{'tsina':'','tqq':'100231374','t163':'','tsohu':''}}
+document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+</body>
+</html>
+<script type="text/javascript" src="js/ini.class.js"></script>
+<script type="text/javascript" src="js/Rectangle.class.js"></script>
+<script type="text/javascript" src="js/Image.class.js"></script>
+<script type="text/javascript" src="js/Tank.class.js"></script>
+<script type="text/javascript" src="js/Bullet.class.js"></script>
+<script type="text/javascript" src="js/Explode.class.js"></script>
+<script type="text/javascript" src="js/Wall.class.js"></script>
+<script type="text/javascript" src="js/Water.class.js"></script>
+<script type="text/javascript" src="js/Symbol.class.js"></script>
+

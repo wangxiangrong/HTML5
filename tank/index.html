@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>HTML5坦克游戏制作 第四节</title>
+<style type="text/css">
+#game {
+	margin: 0 auto;
+	width: 650px;
+}
+#myCanvas {
+	background: url(images/start-bg.png);
+}
+#show {
+	margin: 0 auto;
+	width: 650px;
+	text-align: center;
+	font-weight: bold;
+	margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+<h1 align="center">HTML5 坦克大战</h1>
+<div id="game">
+  <canvas id="myCanvas" width="650" height="400"> 您的浏览器不支持HTML5哦! 请安装Chrome吧! </canvas>
+  <audio id="audio" src="audio/fire.wav"></audio>
+</div>
+<script type="text/javascript">
+//扩展Array删除功能
+Array.prototype.indexOf = function(val) {
+	for (var i = 0; i < this.length; i++) { 
+		if (this[i] == val) return i;
+	} 
+	return -1;   
+};
+Array.prototype.remove = function(val) {  
+ 	var index = this.indexOf(val);  
+ 	if (index > -1) { 
+	  	this.splice(index, 1);   
+	}       
+};
+
+var badTankNumber = 20;
+
+var bullets  = new Array();//子弹容器
+var explodes = new Array();//爆炸效果容器
+var tanks    = new Array();//坏坦克容器
+
+var loopTime = 100;
+
+window.onload = function(){
+	setInterval(start, loopTime);//设置FPS
+	 
+	var symbol = new Symbol();//老鬼
+	var tank =  new Tank(true,200,200);
+	var water1 = new Water(100,100);
+	
+	var wall = new Wall(0,200);
+	//if(start_audio.paused){ start_audio.play();}	
+	
+	
+	function isTanks(){ 
+		if(tanks.length != 3){
+			var x = Math.random() * 300;
+			tanks.push(new Tank(false,x,0)); 
+		}
+	}
+	
+	
+	
+	
+	//"绘制线程"
+	function start(){
+		isTanks();
+		tank.hitWater(water1);
+		tank.hitWall(wall);
+		clear();
+		
+		//子弹绘制
+		for(var i=0; i < bullets.length; i++){
+			var b = bullets[i];
+			b.draw(context);
+			b.hitTanks(tanks);
+		}
+		for(var i=0; i<explodes.length; i++){
+			var e = explodes[i];
+			e.draw(context);
+		}
+		
+		
+		for(var j=0; j < tanks.length; j++){
+			var ta = tanks[j]; 
+			tank.hitTank(ta);
+			ta.draw(context);
+		}
+		
+		water1.draw(context);
+		wall.draw(context);
+		
+		symbol.draw(context);
+		tank.draw(context); 
+		
+		//显示世界还存在的东西
+		context.fillStyle="#FF0000";
+		context.fillText("爆炸:"+explodes.length,20,20);
+		context.fillText("子弹:"+bullets.length,20,40);
+		context.fillText("坦克:"+tanks.length,20,60);
+	}
+	
+	
+	function clear(){
+		context.fillStyle='#000';
+		context.fillRect(0,0,650,400);
+	}
+	
+ 
+	
+	//捕捉事件
+	document.onkeydown = function(event){tank.keydown(event);}
+	document.onkeyup   = function(event){tank.keyup(event);}
+}
+
+
+
+</script>
+<div id="show"> power by marker QQ: 903595558 </div>
+</body>
+</html>
+<script type="text/javascript" src="js/ini.class.js"></script>
+<script type="text/javascript" src="js/Rectangle.class.js"></script>
+<script type="text/javascript" src="js/Image.class.js"></script>
+<script type="text/javascript" src="js/Tank.class.js"></script>
+<script type="text/javascript" src="js/Bullet.class.js"></script>
+<script type="text/javascript" src="js/Explode.class.js"></script>
+<script type="text/javascript" src="js/Wall.class.js"></script>
+<script type="text/javascript" src="js/Water.class.js"></script>
+<script type="text/javascript" src="js/Symbol.class.js"></script>
